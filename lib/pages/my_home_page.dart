@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:payment_app/component/colors.dart';
+import 'package:payment_app/widgets/buttons.dart';
 import 'package:payment_app/widgets/large_buttons.dart';
 import 'package:payment_app/widgets/text_size.dart';
 
@@ -35,7 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           _mainBackground(),
           _curveImageContainer(),
+        
           _buttonContainer(),
+          // _textContainer(),
         ],
       ),
     );
@@ -45,17 +49,92 @@ class _MyHomePageState extends State<MyHomePage> {
     return Positioned(
       bottom: 15,
       right: 50,
-      child: Container(
-        height: 50,
-        width: 60,
-        decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage("images/lines.png")),
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 15,
-                  offset: Offset(0, 1),
-                  color: Color(0xff11324d).withOpacity(0.2))
-            ]),
+      child: GestureDetector(
+        onTap: (){
+          showModalBottomSheet<dynamic> (
+            backgroundColor: Colors. transparent,
+            barrierColor: Colors.transparent,
+            isScrollControlled: true,
+            context: context,
+           builder: (BuildContext bc){
+             return Container( 
+               height: MediaQuery.of(context).size.height-260,
+               child: Stack(
+                children: [
+                  Positioned(
+                    bottom: 0,                
+                    child: 
+                  Container(
+                    color: Color(0xffeef1f4).withOpacity(0.7),
+                    width: MediaQuery.of(context).size.width,
+                 height: MediaQuery.of(context).size.height-310,
+
+                  )
+                  ),
+                  Positioned(
+                    right: 50,
+                    top: 0,
+                    child: 
+                  Container(
+                    padding: EdgeInsets.only(top: 5,bottom: 25),
+                    width: 60,
+                    height: 230,
+                    decoration: BoxDecoration(
+                      color: AppColor.mainColor,
+                      borderRadius: BorderRadius.circular(29)
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AppButtons(icon: Icons.cancel,
+                        iconColor: AppColor.mainColor,
+                        textColor: Colors.white,
+                        backgroundColor: Colors.white,
+                        onTap:(){
+                          Navigator.pop(context);
+                        } ,
+                        
+                        ),
+                         AppButtons(icon: Icons.add,
+                        iconColor: AppColor.mainColor,
+                        textColor: Colors.white,
+                        backgroundColor: Colors.white,
+                        text: "Add Bill",
+                       
+                        
+                        ),
+                         AppButtons(icon: Icons.history,
+                        iconColor: AppColor.mainColor,
+                        textColor: Colors.white,
+                        backgroundColor: Colors.white,
+                        text: "History",
+
+                        
+                        ),
+                      ],
+                    ),
+                  )
+                  )
+                ],
+               ),
+               
+             );
+             
+           });
+        },
+      
+        child: Container(
+          height: 50,
+          width: 60,
+          decoration: BoxDecoration(
+              image: DecorationImage(image: AssetImage("images/lines.png")),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 15,
+                    offset: Offset(0, 1),
+                    color: Color(0xff11324d).withOpacity(0.2))
+              ]),
+        ),
       ),
     );
   }
@@ -83,8 +162,12 @@ class _MyHomePageState extends State<MyHomePage> {
           height: MediaQuery.of(context).size.height * 0.1,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  fit: BoxFit.cover, image: AssetImage("images/curve.png"))),
-        ));
+                  fit: BoxFit.cover, image: AssetImage("images/curve.png")
+                  )
+                  ),
+        )
+        );
+      
   }
 
   _ListBills() {
@@ -97,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         removeTop: true,
         child: ListView.builder(
-            itemCount: 2,
+            itemCount: 4,
             itemBuilder: (_, index) {
               return Container(
                 margin: const EdgeInsets.only(top: 20, right: 20),
@@ -247,4 +330,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Color(0xFF192c49),
         ));
   }
+            // _textContainer(){
+            // }
+
 }

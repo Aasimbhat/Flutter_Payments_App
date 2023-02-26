@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:payment_app/component/colors.dart';
+import 'package:payment_app/controllers/data_controller.dart';
 import 'package:payment_app/pages/payment_page.dart';
 import 'package:payment_app/widgets/buttons.dart';
 import 'package:payment_app/widgets/large_buttons.dart';
@@ -12,6 +13,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final DataController _controller=Get.put(DataController());
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -23,7 +25,22 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Stack(
           children: [
             _headSection(),
-            _ListBills(),
+            Obx((){
+              if(_controller.loading==false){
+               return Center(
+                 child: Container(
+                  margin: const EdgeInsets.only(top: 140 ),
+                  width: 80,
+                  height: 80,
+                  child: CircularProgressIndicator(),
+                 ),
+               );
+              }else{
+              return _ListBills();
+
+              }
+
+            }),
             _payButton(),
           ],
         ),
@@ -38,11 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           _mainBackground(),
           _curveImageContainer(),
-
           _buttonContainer(),
           _textContainer(),
-
-       
         ],
       ),
     );
@@ -142,8 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
               image: DecorationImage(
                   fit: BoxFit.cover,
                   image: AssetImage("images/background.png"))),
-        )
-        );
+        ));
   }
 
   _curveImageContainer() {
@@ -158,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: BoxFit.cover, image: AssetImage("images/curve.png"))),
         ));
   }
-
+  
   _ListBills() {
     return Positioned(
       top: 320,
@@ -169,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         removeTop: true,
         child: ListView.builder(
-            itemCount: 4,
+            itemCount: _controller.list.length,
             itemBuilder: (_, index) {
               return Container(
                 margin: const EdgeInsets.only(top: 20, right: 20),
@@ -195,6 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
@@ -208,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     image: DecorationImage(
                                         fit: BoxFit.cover,
                                         image:
-                                            AssetImage("images/brand1.png"))),
+                                            AssetImage(_controller.list[index]["img"]))),
                               ),
                               SizedBox(
                                 width: 10,
@@ -217,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "KenGen Power",
+                                    _controller.list[index]["brand"],
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: AppColor.mainColor,
@@ -237,8 +251,11 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ],
                           ),
+                          SizedBox(
+                            height: 2,
+                          ),
                           SizedText(
-                            text: "Auto Pay On 28 feb ",
+                            text: _controller.list[index]["more"],
                           ),
                           SizedBox(
                             height: 10,
@@ -267,7 +284,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               Expanded(child: Container()),
                               Text(
-                                "\$1246.09",
+                              "\$"+ _controller.list[index]["due"],
+
                                 style: TextStyle(
                                     fontSize: 18,
                                     color: AppColor.mainColor,
@@ -316,36 +334,35 @@ class _MyHomePageState extends State<MyHomePage> {
           textColor: Colors.white,
           backgroundColor: Color(0xFF192c49),
           onTap: () {
-            Get.to(()=>PaymentPage());
+            Get.to(() => PaymentPage());
           },
         ));
   }
-  _textContainer(){
-   return Stack(
-    children: [
-         Positioned(
-              left: 0,
-              top: 100,
-              child: Text(
-                "My Bills",
-                style: TextStyle(
-                    fontSize: 70,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff293952)),
-              )
-              ),
-          Positioned(
-              left: 40,
-              top: 80,
-              child: Text(
-                "My Bills",
-                style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              )),
-    ],
-   );
-  }
 
+  _textContainer() {
+    return Stack(
+      children: [
+        Positioned(
+            left: 0,
+            top: 100,
+            child: Text(
+              "My Bills",
+              style: TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff293952)),
+            )),
+        Positioned(
+            left: 40,
+            top: 80,
+            child: Text(
+              "My Bills",
+              style: TextStyle(
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            )),
+      ],
+    );
+  }
 }

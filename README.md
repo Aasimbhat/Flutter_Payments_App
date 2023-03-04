@@ -5,7 +5,6 @@
 
 
 
-![1img](https://user-images.githubusercontent.com/90784719/219694015-9142f551-07b7-4ef9-8561-25cfca379c81.jpg)
 
 
 
